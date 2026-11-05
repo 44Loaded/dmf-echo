@@ -1,0 +1,35 @@
+name: Build VST3
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            name: windows
+            configure: -S DMF_ECHO_flat -B build
+          - os: macos-latest
+            name: macos
+            configure: -S DMF_ECHO_flat -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES=arm64\;x86_64
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.name }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake ${{ matrix.configure }}
+      - name: Build
+        run: cmake --build build --config Release --target DMF_ECHO_VST3 --parallel
+      - name: List output
+        if: always()
+        shell: bash
+        run: find build/DMF_ECHO_artefacts
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DMF_ECHO-VST3-${{ matrix.name }}
+          path: build/DMF_ECHO_artefacts/
+          if-no-files-found: error
