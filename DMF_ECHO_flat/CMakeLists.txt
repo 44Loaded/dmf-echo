@@ -24,6 +24,7 @@ juce_add_plugin(DMF_ECHO
     EDITOR_WANTS_KEYBOARD_FOCUS FALSE
     COPY_PLUGIN_AFTER_BUILD FALSE
 )
+juce_generate_juce_header(DMF_ECHO)
 
 target_sources(DMF_ECHO PRIVATE
     PluginProcessor.cpp
