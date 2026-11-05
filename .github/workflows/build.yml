@@ -24,8 +24,12 @@ jobs:
         run: cmake ${{ matrix.configure }}
       - name: Build
         run: cmake —build build —config Release —target DMF_ECHO_VST3 —parallel
+      - name: List output
+        if: always()
+        shell: bash
+        run: find build/DMF_ECHO_artefacts
       - uses: actions/upload-artifact@v4
         with:
           name: DMF_ECHO-VST3-${{ matrix.name }}
-          path: build/DMF_ECHO_artefacts/Release/VST3/
+          path: build/DMF_ECHO_artefacts/
           if-no-files-found: error
