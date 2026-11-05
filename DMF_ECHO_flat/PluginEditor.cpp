@@ -26,7 +26,7 @@ void DMFEchoAudioProcessorEditor::NeonLookAndFeel::drawRotarySlider (juce::Graph
 DMFEchoAudioProcessorEditor::DMFEchoAudioProcessorEditor (DMFEchoAudioProcessor& p)
  : AudioProcessorEditor (&p), processor (p)
 {
-    setLookAndFeel (&look); setSize (1200, 675); setResizable (true, true); setResizeLimits (900, 506, 1600, 900);
+    setLookAndFeel (&look);
     auto& state = processor.parameters;
     logo.setText ("DMF ECHO", juce::dontSendNotification); logo.setFont (juce::Font (juce::FontOptions (34.0f, juce::Font::bold))); logo.setColour (juce::Label::textColourId, violet); addAndMakeVisible (logo);
     brand.setText ("D I G I T A L\nM A F I A", juce::dontSendNotification); brand.setFont (juce::Font (juce::FontOptions (11.0f))); brand.setColour (juce::Label::textColourId, pale); addAndMakeVisible (brand);
@@ -74,6 +74,8 @@ DMFEchoAudioProcessorEditor::DMFEchoAudioProcessorEditor (DMFEchoAudioProcessor&
         k.slider->onValueChange = [this,i] { auto& a=knobs[i]; const auto v=a.slider->getValue(); juce::String s;
             if (i==0) s=juce::String ((int) v)+" ms"; else s=juce::String ((int) std::round (v*100))+"%"; a.value->setText (s, juce::dontSendNotification); }; k.slider->onValueChange();
     }
+    setResizable (true, true); setResizeLimits (900, 506, 1600, 900);
+    setSize (1200, 675);
     startTimerHz (30);
 }
 DMFEchoAudioProcessorEditor::~DMFEchoAudioProcessorEditor() { for (auto& k : knobs) if (k.slider) k.slider->setLookAndFeel (nullptr); setLookAndFeel (nullptr); }
@@ -124,6 +126,7 @@ void DMFEchoAudioProcessorEditor::paint (juce::Graphics& g)
 }
 void DMFEchoAudioProcessorEditor::resized()
 {
+    if (knobs[5].value == nullptr) return;
     auto b=getLocalBounds(); const float sx=b.getWidth()/1200.0f, sy=b.getHeight()/675.0f; auto R=[&](float x,float y,float w,float h){return juce::Rectangle<int>((int)(x*sx),(int)(y*sy),(int)(w*sx),(int)(h*sy));};
     logo.setBounds (R(34,18,175,62)); brand.setBounds (R(210,24,115,48)); title.setBounds (R(34,76,300,16)); preset.setBounds (R(430,25,340,38)); saveButton.setBounds (R(780,25,42,38)); settingsButton.setBounds (R(1110,24,48,40)); footerBrand.setBounds (R(930,638,220,22));
     sync.setBounds (R(52,145,175,38)); division.setBounds (R(52,214,175,40));
