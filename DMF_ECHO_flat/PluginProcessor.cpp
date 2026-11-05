@@ -95,7 +95,7 @@ void DMFEchoAudioProcessor::applyFactoryPreset (int i)
 
 bool DMFEchoAudioProcessor::savePresetToFile (const juce::File& file) const
 {
-    auto xml = parameters.copyState().createXml();
+    auto xml = parameters.state.createXml();
     return xml != nullptr && xml->writeTo (file);
 }
 bool DMFEchoAudioProcessor::loadPresetFromFile (const juce::File& file)
